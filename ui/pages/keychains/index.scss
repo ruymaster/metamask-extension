@@ -75,7 +75,7 @@
 
 .reveal-seed {
   a {
-    color: var(--primary-blue);
+    color: var(--color-primary-default);
   }
 
   &__content {
@@ -85,7 +85,7 @@
   &__label {
     font-weight: 700;
     font-size: 14px;
-    color: var(--ui-black);
+    color: var(--color-text-default);
   }
 
   &__error {
@@ -96,15 +96,13 @@
   }
 
   &__buttons {
-    color: var(--ui-4);
-    background-color: var(--neutral-white);
     border-width: 0 0 1px 0;
     border-style: solid;
-    border-color: var(--ui-4);
+    border-color: var(--color-icon-default);
     width: 100%;
 
     &__active {
-      border-color: var(--primary-blue);
+      border-color: var(--color-primary-default);
       border-width: 0 0 2px 0;
     }
   }
@@ -112,12 +110,10 @@
   &__button {
     display: flex;
     justify-content: center;
-    color: var(--ui-4);
-    background-color: var(--neutral-white);
     margin-bottom: 10px;
 
     &__active {
-      color: var(--primary-blue);
+      color: var(--color-primary-default);
     }
   }
 }

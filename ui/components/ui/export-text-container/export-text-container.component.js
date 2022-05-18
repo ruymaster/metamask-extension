@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useCopyToClipboard } from '../../../hooks/useCopyToClipboard';
 import { clearClipboard } from '../../../helpers/utils/util';
+import Copy from '../icon/copy-icon.component';
 
 function ExportTextContainer({ text = '' }) {
   const t = useI18nContext();

@@ -31,25 +31,14 @@ class RevealSeedPage extends Component {
   };
 
   componentDidMount() {
-    const { metricsEvent } = this.context;
     const passwordBox = document.getElementById('password-box');
     if (passwordBox) {
       passwordBox.focus();
     }
-
-    metricsEvent({
-      eventOpts: {
-        category: 'Wallet security',
-        action: 'Reveal SRP',
-        name: 'Initiated',
-      },
-    });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    this.setState({ showPopover: true });
-    this.setState({ seedWords: null, error: null });
+  handleSubmit() {
+    this.setState({ showPopover: false });
     this.props
       .requestRevealSeedWords(this.state.password)
       .then((seedWords) =>
@@ -63,13 +52,12 @@ class RevealSeedPage extends Component {
       <Box
         className="page-container__warning-container"
         margin={4}
-        padding={2}
         borderStyle={BORDER_STYLE.SOLID}
         borderWidth={1}
         borderRadius={SIZES.MD}
-        borderColor={COLORS.ERROR1}
+        borderColor={COLORS.ERROR_DEFAULT}
       >
-        <i className="fa fa-exclamation-triangle fa-2x page-container__warning-icon" />
+        <i className="fa fa-eye-slash page-container__warning-icon" />
         <Box className="page-container__warning-message">
           <Typography
             variant={TYPOGRAPHY.H7}
@@ -102,11 +90,11 @@ class RevealSeedPage extends Component {
     const { t } = this.context;
 
     return (
-      <form onSubmit={(event) => this.handleSubmit(event)}>
+      <form onSubmit={() => this.setState({ showPopover: true })}>
         <Typography
           variant={TYPOGRAPHY.H6}
-          fontWeight={FONT_WEIGHT[700]}
-          color={COLORS.BLACK}
+          fontWeight={FONT_WEIGHT.BOLD}
+          color={COLORS.TEXT_DEFAULT}
           boxProps={{ paddingBottom: 3 }}
           className="input-label"
           htmlFor="password-box"
@@ -158,7 +146,7 @@ class RevealSeedPage extends Component {
             type="primary"
             large
             className="page-container__footer-button"
-            onClick={(event) => this.handleSubmit(event)}
+            onClick={() => this.setState({ showPopover: true })}
             disabled={this.state.password === ''}
           >
             {this.context.t('next')}
@@ -263,7 +251,6 @@ RevealSeedPage.propTypes = {
 
 RevealSeedPage.contextTypes = {
   t: PropTypes.func,
-  metricsEvent: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
