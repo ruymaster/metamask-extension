@@ -2664,9 +2664,6 @@
   "revealSeedWords": {
     "message": "Reveal Secret Recovery Phrase"
   },
-  "revealSeedWordsDescription": {
-    "message": "If you ever change browsers or move computers, you will need this Secret Recovery Phrase to access your accounts. Save them somewhere safe and secret."
-  },
   "revealTheSeedPhrase": {
     "message": "Reveal seed phrase"
   },
@@ -2684,9 +2681,6 @@
   },
   "save": {
     "message": "Save"
-  },
-  "saveAsCsvFile": {
-    "message": "Save as CSV File"
   },
   "scanInstructions": {
     "message": "Place the QR code in front of your camera"
@@ -4089,9 +4083,6 @@
   },
   "youSign": {
     "message": "You are signing"
-  },
-  "yourPrivateSeedPhrase": {
-    "message": "Your private Secret Recovery Phrase"
   },
   "yourSecretSeedPhrase": {
     "message": "Your Secret Recovery Phrase"
