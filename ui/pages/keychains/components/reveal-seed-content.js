@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import classnames from 'classnames';
 import { useI18nContext } from '../../../hooks/useI18nContext';
@@ -14,10 +15,36 @@ import {
   TYPOGRAPHY,
   COLORS,
 } from '../../../helpers/constants/design-system';
+import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 
 export default function RevealSeedContent({ seedWords }) {
   const t = useI18nContext();
+  const history = useHistory();
   const [showTextViewSPR, setShowTextViewSPR] = useState(true);
+
+  const [tabHasFocus, setTabHasFocus] = useState(true);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      setTabHasFocus(true);
+    };
+
+    const handleBlur = () => {
+      setTabHasFocus(false);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, []);
+
+  useEffect(() => {
+    !tabHasFocus && history.push(DEFAULT_ROUTE);
+  }, [history, tabHasFocus]);
 
   return (
     <Box className="reveal-seed__container">
