@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { editExistingTransaction, editTransaction } from '../../ducks/send';
+import { editExistingTransaction } from '../../ducks/send';
 import { clearConfirmTransaction } from '../../ducks/confirm-transaction/confirm-transaction.duck';
 import { ASSET_TYPES } from '../../../shared/constants/transaction';
 import ConfirmSendEther from './confirm-send-ether.component';

@@ -359,7 +359,7 @@ export const draftTransactionInitialState = {
   status: SEND_STATUSES.VALID,
   transactionType: TRANSACTION_ENVELOPE_TYPES.LEGACY,
   userInputHexData: null,
-  editAccount: null,
+  fromAccount: null,
   gas: {
     gasLimit: '0x0',
     gasPrice: '0x0',
@@ -704,6 +704,16 @@ export const initializeSendState = createAsyncThunk(
     const { send: sendState, metamask } = state;
     const draftTransaction =
       sendState.draftTransactions[sendState.currentTransactionUUID];
+
+    // If the draft transaction is not present, then this action has been
+    // dispatched out of sync with the intended flow. This is not always a bug.
+    // For instance, in the actions.js file we dispatch this action anytime the
+    // chain changes.
+    if (!draftTransaction) {
+      thunkApi.rejectWithValue(
+        'draftTransaction not found, possibly not on send flow',
+      );
+    }
 
     // Default gasPrice to 1 gwei if all estimation fails, this is only used
     // for gasLimit estimation and won't be set directly in state. Instead, we
