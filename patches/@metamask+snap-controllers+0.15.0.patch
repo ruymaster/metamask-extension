@@ -1,0 +1,36 @@
+diff --git a/node_modules/@metamask/snap-controllers/dist/services/iframe/IframeExecutionService.js b/node_modules/@metamask/snap-controllers/dist/services/iframe/IframeExecutionService.js
+index 8a93679..f588a5b 100644
+--- a/node_modules/@metamask/snap-controllers/dist/services/iframe/IframeExecutionService.js
++++ b/node_modules/@metamask/snap-controllers/dist/services/iframe/IframeExecutionService.js
+@@ -77,17 +77,26 @@ class IframeExecutionService extends AbstractExecutionService_1.AbstractExecutio
+      */
+     _createWindow(uri, jobId) {
+         const iframe = document.createElement('iframe');
+-        return new Promise((resolve) => {
++        iframe.setAttribute('id', jobId);
++        iframe.setAttribute('sandbox', 'allow-scripts');
++        return new Promise((resolve, reject) => {
++            // We need to add the iframe to the DOM before populating it, otherwise
++            // Chrome will not let us catch errors occurring inside the iframe.
++            document.body.appendChild(iframe);
++            // We have to add the `load` listener after appending the iframe to the
++            // DOM but before adding the `src` attribute, because the event fires
++            // both when appending the iframe and when it's populated.
++            // Ref: https://stackoverflow.com/questions/10781880/dynamically-created-iframe-triggers-onload-event-twice/15880489#15880489
+             iframe.addEventListener('load', () => {
+                 if (iframe.contentWindow) {
+                     resolve(iframe.contentWindow);
+                 }
++                else {
++                    reject(new Error(`iframe.contentWindow not present on load for job "${jobId}".`));
++                }
+             });
+-            // Set attributes before adding the iframe to the DOM to trigger 'load' event once everything has been loaded.
++            // This causes the `load` event to fire.
+             iframe.setAttribute('src', uri);
+-            iframe.setAttribute('id', jobId);
+-            iframe.setAttribute('sandbox', 'allow-scripts');
+-            document.body.appendChild(iframe);
+         });
+     }
+ }
