@@ -1535,12 +1535,14 @@ const slice = createSlice({
         if (state.stage !== SEND_STAGES.EDIT) {
           // This event occurs when the user selects a new account from the
           // account menu, or the currently active account's balance updates.
-          state.account.balance = action.payload.account.balance;
-          state.account.address = action.payload.account.address;
+          state.nativeBalance = action.payload.account.balance;
+          state.accountAddress = action.payload.account.address;
           // We need to update the asset balance if the asset is the native
           // network asset. Once we update the balance we recompute error state.
-          if (state.asset.type === ASSET_TYPES.NATIVE) {
-            state.asset.balance = action.payload.account.balance;
+          const draftTransaction =
+            state.draftTransactions[state.currentTransactionUUID];
+          if (draftTransaction?.asset.type === ASSET_TYPES.NATIVE) {
+            draftTransaction.asset.balance = action.payload.account.balance;
           }
           slice.caseReducers.validateAmountField(state);
           slice.caseReducers.validateGasField(state);
@@ -1559,11 +1561,13 @@ const slice = createSlice({
           // background state changes. If the account that is being updated is
           // the current from account on the edit flow we need to update
           // the balance for the account and revalidate the send state.
-          state.account.balance = action.payload.account.balance;
+          state.nativeBalance = action.payload.account.balance;
           // We need to update the asset balance if the asset is the native
           // network asset. Once we update the balance we recompute error state.
-          if (state.asset.type === ASSET_TYPES.NATIVE) {
-            state.asset.balance = action.payload.account.balance;
+          const draftTransaction =
+            state.draftTransactions[state.currentTransactionUUID];
+          if (draftTransaction?.asset.type === ASSET_TYPES.NATIVE) {
+            draftTransaction.asset.balance = action.payload.account.balance;
           }
           slice.caseReducers.validateAmountField(state);
           slice.caseReducers.validateGasField(state);
@@ -1575,8 +1579,14 @@ const slice = createSlice({
         // to check to see if an entry exists for the current address or if the
         // entry changed.
         const { addressBook } = action.payload;
-        if (addressBook[state.recipient.address]?.name) {
-          state.recipient.nickname = addressBook[state.recipient.address].name;
+        const draftTransaction =
+          state.draftTransactions[state.currentTransactionUUID];
+        if (
+          draftTransaction &&
+          addressBook[draftTransaction.recipient.address]?.name
+        ) {
+          draftTransaction.recipient.nickname =
+            addressBook[draftTransaction.recipient.address].name;
         }
       })
       .addCase(initializeSendState.pending, (state) => {
@@ -1587,21 +1597,6 @@ const slice = createSlice({
         state.isGasEstimateLoading = true;
       })
       .addCase(initializeSendState.fulfilled, (state, action) => {
-        /*
-            return {
-      account,
-      chainId: getCurrentChainId(state),
-      tokens: getTokens(state),
-      gasFeeEstimates,
-      gasEstimateType,
-      gasLimit,
-      gasTotal: addHexPrefix(calcGasTotal(gasLimit, gasPrice)),
-      gasEstimatePollToken,
-      eip1559support,
-      useTokenDetection: getUseTokenDetection(state),
-      tokenAddressList: Object.keys(getTokenList(state)),
-    };
-    */
         // writes the computed initialized state values into the slice and then
         // calculates slice validity using the caseReducers.
         state.eip1559support = action.payload.eip1559support;
