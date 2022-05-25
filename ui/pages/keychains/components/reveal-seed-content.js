@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
@@ -16,13 +16,16 @@ import {
   COLORS,
 } from '../../../helpers/constants/design-system';
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
+import { MetaMetricsContext } from '../../../contexts/metametrics';
+import { EVENT } from '../../../../shared/constants/metametrics';
 
 export default function RevealSeedContent({ seedWords }) {
   const t = useI18nContext();
   const history = useHistory();
   const [showTextViewSPR, setShowTextViewSPR] = useState(true);
-
   const [tabHasFocus, setTabHasFocus] = useState(true);
+
+  const trackEvent = useContext(MetaMetricsContext);
 
   useEffect(() => {
     const handleFocus = () => {
@@ -39,8 +42,16 @@ export default function RevealSeedContent({ seedWords }) {
     return () => {
       window.removeEventListener('focus', handleFocus);
       window.removeEventListener('blur', handleBlur);
+
+      trackEvent({
+        event: 'Reveal SRP Cancelled',
+        category: EVENT.CATEGORIES.SETTINGS,
+        properties: {
+          action: 'Reveal SRP Cancelled',
+        },
+      });
     };
-  }, []);
+  }, [trackEvent]);
 
   useEffect(() => {
     !tabHasFocus && history.push(DEFAULT_ROUTE);

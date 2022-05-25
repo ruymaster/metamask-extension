@@ -15,6 +15,7 @@ import {
   SIZES,
   TYPOGRAPHY,
 } from '../../helpers/constants/design-system';
+import { EVENT } from '../../../shared/constants/metametrics';
 import WarningPopover from './components/warning-popover';
 import RevealSeedContent from './components/reveal-seed-content';
 
@@ -41,9 +42,16 @@ class RevealSeedPage extends Component {
     this.setState({ showPopover: false });
     this.props
       .requestRevealSeedWords(this.state.password)
-      .then((seedWords) =>
-        this.setState({ seedWords, screen: REVEAL_SEED_SCREEN }),
-      )
+      .then((seedWords) => {
+        this.setState({ seedWords, screen: REVEAL_SEED_SCREEN });
+        this.context.trackEvent({
+          event: 'Reveal SRP Completed',
+          category: EVENT.CATEGORIES.SETTINGS,
+          properties: {
+            action: 'Reveal SRP Completed',
+          },
+        });
+      })
       .catch((error) => this.setState({ error: error.message }));
   }
 
@@ -251,6 +259,7 @@ RevealSeedPage.propTypes = {
 
 RevealSeedPage.contextTypes = {
   t: PropTypes.func,
+  trackEvent: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
