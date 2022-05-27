@@ -2291,6 +2291,7 @@ export function getSendErrors(state) {
   return {
     gasFee: state.send.gas.error,
     amount: state.send.amount.error,
+    hexData: state.send.userInputHexData.error,
   };
 }
 
